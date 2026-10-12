@@ -1,0 +1,17 @@
+# 外部技能登记表 —— 不属于本仓库、但希望一并安装到 ~/.claude/skills/ 的技能。
+#
+# 为什么不复制进本仓库：这些技能有自己的上游（第三方维护 / 团队协作仓库）。
+# 复制进来会切断上游更新，也切断你把改动推回去的路。这里只登记"它在本机的哪个位置"，
+# install.sh 会和仓库内技能一样为它们建软链接。
+#
+# 格式：制表符(TAB)分隔的 4 列，# 开头为注释，空行忽略
+#   1. skill-name   安装后的技能名，即 /skill-name，必须全局唯一
+#   2. path         本机绝对路径（支持 ~ 和 $VAR），该目录下须有 SKILL.md
+#   3. upstream     上游地址，仅作记录；路径不存在时 install.sh 会提示你从这里 clone
+#   4. note         备注
+#
+# 换一台机器时，若 clone 路径不同，改第 2 列即可；install.sh 会跳过并提示缺失项，
+# 不会因为某个外部技能没装而中断其余安装。
+
+easyeda-api	/data/hardware/refs/easyeda-api-skill	https://github.com/easyeda/easyeda-api-skill	EasyEDA Pro 官方 API skill，上游持续发版，勿改勿并
+k230	~/.config/opencode/skills/k230	git@g.a-bug.org:canmv/tools/k230-skills.git	K230/CanMV 编译烧录调试，公司 GitLab，改动需推回上游
