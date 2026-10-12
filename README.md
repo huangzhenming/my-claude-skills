@@ -11,7 +11,8 @@ my-claude-skills/
 ├── hardware/
 │   └── eda-design-practice/    ← 一个技能 = 一个含 SKILL.md 的目录
 └── software/
-    └── ccrelay/
+    ├── ccrelay/
+    └── siglent-scope/          技能可以自带 scripts/，随仓库走
 ```
 
 ## 为什么不能整个仓库软链过去
