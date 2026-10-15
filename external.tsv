@@ -15,3 +15,28 @@
 
 easyeda-api	/data/hardware/refs/easyeda-api-skill	https://github.com/easyeda/easyeda-api-skill	EasyEDA Pro 官方 API skill，上游持续发版，勿改勿并
 k230	~/.config/opencode/skills/k230	git@g.a-bug.org:canmv/tools/k230-skills.git	K230/CanMV 编译烧录调试，公司 GitLab，改动需推回上游
+
+# SolidCraft 参数化 3D CAD（Rust，内置 MCP server）。三个 skill 同在一个上游仓库，
+# 更新一次全更新：git -C /data/hardware/refs/solidcraft pull
+#
+# 这三个 skill 依赖 MCP server「solidcraft」，没配 MCP 就无用武之地。本机配置：
+#   作用域  local（绑 /data/mechanic），不是全局 —— 见下方「为什么不配全局」
+#   命令    solidcraft-cli mcp --allow-path /data/mechanic
+#   重配    cd /data/mechanic && claude mcp add solidcraft --scope local -- \
+#             solidcraft-cli mcp --allow-path /data/mechanic
+#   二进制  /usr/local/bin/solidcraft{,-cli} 0.11.1（AppImage/tar.gz 装的，不在本仓库管辖内）
+#
+# 为什么不配全局：该 server 注册 15 个工具，工具定义合计约 2400 token，**每轮常驻**。
+# 官方的 MCP tool search 本可按需加载，但「自定义 ANTHROPIC_BASE_URL」的配置不走
+# tool search，而本机 settings.json 正好设了公司代理，所以只能全量 upfront 加载。
+# 全局配的话，写代码/调示波器/画 PCB 的会话都要白付这 2400 token。
+#
+# 两条实测注意：
+#   1. 当前是无 DISPLAY 的 ssh 会话，只能跑 headless；bridged 模式（solidcraft --control
+#      7878 + mcp --connect）需要图形环境。headless 的 CPU 渲染截图实测正常。
+#   2. 共 357 条建模命令，但 MCP 只暴露 15 个工具（命令名走 execute/batch 的字符串参数）。
+#      **不要猜命令名**，用 list_commands 工具或 `solidcraft-cli commands` 查
+#      —— 实测 sketch.rectangle 不存在，正确的是 sketch.rectangle.two_point。
+solidcraft-modeling	/data/hardware/refs/solidcraft/skills/solidcraft-modeling	https://github.com/bherbruck/solidcraft	从零建新零件/外壳/支架
+solidcraft-editing	/data/hardware/refs/solidcraft/skills/solidcraft-editing	https://github.com/bherbruck/solidcraft	改现有设计、修报错的特征
+solidcraft-checking	/data/hardware/refs/solidcraft/skills/solidcraft-checking	https://github.com/bherbruck/solidcraft	查 SolidCraft 自己不报的错、回归测试、从 build123d/CadQuery/OpenSCAD/STEP 移植
